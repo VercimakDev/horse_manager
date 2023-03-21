@@ -1,0 +1,42 @@
+2023-03-21T12:57:59.328+01:00 r= ip=  INFO 1896 --- [main] .a.i.SepmIndividualAssignmentApplication : Starting SepmIndividualAssignmentApplication using Java 17.0.2 with PID 1896 (C:\Uni\SEPM\einzelphase\backend\target\classes started by verci in C:\Uni\SEPM\einzelphase\backend)
+2023-03-21T12:57:59.330+01:00 r= ip=  INFO 1896 --- [main] .a.i.SepmIndividualAssignmentApplication : No active profile set, falling back to 1 default profile: "default"
+2023-03-21T12:58:00.128+01:00 r= ip=  INFO 1896 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-03-21T12:58:00.135+01:00 r= ip=  INFO 1896 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-03-21T12:58:00.135+01:00 r= ip=  INFO 1896 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-03-21T12:58:00.191+01:00 r= ip=  INFO 1896 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-03-21T12:58:00.191+01:00 r= ip=  INFO 1896 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 833 ms
+2023-03-21T12:58:00.213+01:00 r= ip=  INFO 1896 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-03-21T12:58:00.374+01:00 r= ip=  INFO 1896 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn1: url=jdbc:h2:./wendydb user=SA
+2023-03-21T12:58:00.375+01:00 r= ip=  INFO 1896 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-03-21T12:58:00.384+01:00 r= ip=  INFO 1896 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:./wendydb'
+2023-03-21T12:58:00.679+01:00 r= ip=  INFO 1896 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-03-21T12:58:00.685+01:00 r= ip=  INFO 1896 --- [main] .a.i.SepmIndividualAssignmentApplication : Started SepmIndividualAssignmentApplication in 1.68 seconds (process running for 2.367)
+2023-03-21T13:05:53.655+01:00 r= ip=  INFO 1896 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-03-21T13:05:53.656+01:00 r= ip=  INFO 1896 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-03-21T13:05:53.658+01:00 r= ip=  INFO 1896 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2023-03-21T13:05:53.664+01:00 r=428b114e4814 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-1] a.a.t.s.a.individual.config.LogFilter    : >>> GET /horses UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+2023-03-21T13:05:53.717+01:00 r=428b114e4814 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-1] a.a.t.s.a.individual.rest.HorseEndpoint  : GET /horses
+2023-03-21T13:05:53.775+01:00 r=428b114e4814 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-1] a.a.t.s.a.individual.config.LogFilter    : <<< GET /horses status=200 time=110ms
+2023-03-21T13:06:04.913+01:00 r=9f0e7e795007 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-2] a.a.t.s.a.individual.config.LogFilter    : >>> GET /horses UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+2023-03-21T13:06:04.915+01:00 r=9f0e7e795007 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-2] a.a.t.s.a.individual.rest.HorseEndpoint  : GET /horses
+2023-03-21T13:06:04.917+01:00 r=9f0e7e795007 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-2] a.a.t.s.a.individual.config.LogFilter    : <<< GET /horses status=200 time=3ms
+2023-03-21T13:06:29.675+01:00 r=dc17617e7fae ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-3] a.a.t.s.a.individual.config.LogFilter    : >>> GET /owners?name=Me&maxAmount=5 UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+2023-03-21T13:06:29.677+01:00 r=dc17617e7fae ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-3] a.a.t.s.a.individual.rest.OwnerEndpoint  : GET /owners query parameters: OwnerSearchDto[name=Me, maxAmount=5]
+2023-03-21T13:06:29.683+01:00 r=dc17617e7fae ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-3] a.a.t.s.a.individual.config.LogFilter    : <<< GET /owners?name=Me&maxAmount=5 status=200 time=8ms
+2023-03-21T13:06:34.363+01:00 r=a11a6a1b02d8 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-4] a.a.t.s.a.individual.config.LogFilter    : >>> OPTIONS /horses UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+2023-03-21T13:06:34.367+01:00 r=a11a6a1b02d8 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-4] a.a.t.s.a.individual.config.LogFilter    : <<< OPTIONS /horses status=200 time=3ms
+2023-03-21T13:06:34.369+01:00 r=3974fc1c1bc6 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-5] a.a.t.s.a.individual.config.LogFilter    : >>> POST /horses UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+2023-03-21T13:06:34.371+01:00 r=3974fc1c1bc6 ip=0:0:0:0:0:0:0:1  WARN 1896 --- [http-nio-8080-exec-5] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' is not supported]
+2023-03-21T13:06:34.372+01:00 r=3974fc1c1bc6 ip=0:0:0:0:0:0:0:1  WARN 1896 --- [http-nio-8080-exec-5] a.a.t.s.a.individual.config.LogFilter    : <<< POST /horses status=405 time=2ms
+2023-03-21T13:06:38.049+01:00 r=7a36a49fc9c3 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-6] a.a.t.s.a.individual.config.LogFilter    : >>> POST /horses UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+2023-03-21T13:06:38.050+01:00 r=7a36a49fc9c3 ip=0:0:0:0:0:0:0:1  WARN 1896 --- [http-nio-8080-exec-6] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' is not supported]
+2023-03-21T13:06:38.050+01:00 r=7a36a49fc9c3 ip=0:0:0:0:0:0:0:1  WARN 1896 --- [http-nio-8080-exec-6] a.a.t.s.a.individual.config.LogFilter    : <<< POST /horses status=405 time=0ms
+2023-03-21T13:06:39.933+01:00 r=028af454ba03 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-7] a.a.t.s.a.individual.config.LogFilter    : >>> GET /horses UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+2023-03-21T13:06:39.935+01:00 r=028af454ba03 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-7] a.a.t.s.a.individual.rest.HorseEndpoint  : GET /horses
+2023-03-21T13:06:39.936+01:00 r=028af454ba03 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-7] a.a.t.s.a.individual.config.LogFilter    : <<< GET /horses status=200 time=2ms
+2023-03-21T15:48:16.109+01:00 r=e1d6ce97d171 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-9] a.a.t.s.a.individual.config.LogFilter    : >>> GET /horses UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+2023-03-21T15:48:16.110+01:00 r=e1d6ce97d171 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-9] a.a.t.s.a.individual.rest.HorseEndpoint  : GET /horses
+2023-03-21T15:48:16.112+01:00 r=e1d6ce97d171 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-9] a.a.t.s.a.individual.config.LogFilter    : <<< GET /horses status=200 time=3ms
+2023-03-21T16:21:46.130+01:00 r=2754372c55b8 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-1] a.a.t.s.a.individual.config.LogFilter    : >>> GET /horses UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+2023-03-21T16:21:46.132+01:00 r=2754372c55b8 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-1] a.a.t.s.a.individual.rest.HorseEndpoint  : GET /horses
+2023-03-21T16:21:46.134+01:00 r=2754372c55b8 ip=0:0:0:0:0:0:0:1  INFO 1896 --- [http-nio-8080-exec-1] a.a.t.s.a.individual.config.LogFilter    : <<< GET /horses status=200 time=3ms

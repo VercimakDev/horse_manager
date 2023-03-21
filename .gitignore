@@ -1,0 +1,7 @@
+#ignore folders mentioned in Techstory 14
+traget/
+dist/
+node_modules/
+
+#ignore databasefiles
+*.db
