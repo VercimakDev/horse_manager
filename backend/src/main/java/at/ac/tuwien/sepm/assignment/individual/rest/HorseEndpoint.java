@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.assignment.individual.rest;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
+import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
@@ -12,12 +13,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -50,6 +46,18 @@ public class HorseEndpoint {
       logClientError(status, "Horse to get details of not found", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
+  }
+  @PostMapping
+  public void createHorse(@RequestBody HorseDetailDto horse){
+    LOG.info("POST trying to create Horse with the Name: "+ horse.name());
+    try{
+      service.create(horse);
+    } catch(Exception e) {
+      HttpStatus status = HttpStatus.BAD_REQUEST;
+      logClientError(status,"Horse could not be created",e);
+      throw new ResponseStatusException(status,e.getMessage(),e);
+    }
+
   }
 
 

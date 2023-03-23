@@ -76,6 +76,16 @@ public class HorseServiceImpl implements HorseService {
         ownerMapForSingleId(horse.getOwnerId()));
   }
 
+  @Override
+  public HorseDetailDto create(HorseDetailDto horse) throws ValidationException, ConflictException{
+    validator.validateForCreation(horse);
+    var createdHorse = dao.create(horse);
+    return mapper.entityToDetailDto(
+            createdHorse,
+            ownerMapForSingleId(createdHorse.getOwnerId())
+    );
+  }
+
 
   private Map<Long, OwnerDto> ownerMapForSingleId(Long ownerId) {
     try {

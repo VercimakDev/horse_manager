@@ -8,7 +8,7 @@ import {Owner} from 'src/app/dto/owner';
 import {Sex} from 'src/app/dto/sex';
 import {HorseService} from 'src/app/service/horse.service';
 import {OwnerService} from 'src/app/service/owner.service';
-
+import {HttpClient} from "@angular/common/http";
 
 export enum HorseCreateEditMode {
   create,
@@ -21,7 +21,8 @@ export enum HorseCreateEditMode {
   styleUrls: ['./horse-create-edit.component.scss']
 })
 export class HorseCreateEditComponent implements OnInit {
-
+  readonly rootUrl = 'localhost:8080';
+  posts: any;
   mode: HorseCreateEditMode = HorseCreateEditMode.create;
   horse: Horse = {
     name: '',
@@ -37,6 +38,7 @@ export class HorseCreateEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private notification: ToastrService,
+    private http: HttpClient,
   ) {
   }
 
@@ -121,9 +123,9 @@ export class HorseCreateEditComponent implements OnInit {
         error: error => {
           console.error('Error creating horse', error);
           // TODO show an error message to the user. Include and sensibly present the info from the backend!
+          this.notification.error('Could not create a new horse. Errorcode: '+error.status+', Errortext: '+error.error.errors);
         }
       });
     }
   }
-
 }

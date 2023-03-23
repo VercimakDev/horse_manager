@@ -2,7 +2,10 @@ package at.ac.tuwien.sepm.assignment.individual.persistence;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
+import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
+import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
+
 import java.util.List;
 
 /**
@@ -37,4 +40,14 @@ public interface HorseDao {
    * @throws NotFoundException if the Horse with the given ID does not exist in the persistent data store
    */
   Horse getById(long id) throws NotFoundException;
+
+  /**
+   * Create the horse with the data given in {@code horse}
+   *  in the persistent data store.
+   *
+   * @param horse the horse to create
+   * @return the created horse
+   * @throws NotFoundException if the Horse with the given ID does not exist in the persistent data store
+   */
+  Horse create(HorseDetailDto horse) throws ValidationException, ConflictException;
 }

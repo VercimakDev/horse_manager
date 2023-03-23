@@ -3,5 +3,8 @@ traget/
 dist/
 node_modules/
 
+#logfiles should also be ignored
+log/
+
 #ignore databasefiles
 *.db

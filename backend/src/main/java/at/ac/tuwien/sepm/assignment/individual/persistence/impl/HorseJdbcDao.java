@@ -2,8 +2,10 @@ package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
+import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
+import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.type.Sex;
 import java.lang.invoke.MethodHandles;
@@ -29,7 +31,7 @@ public class HorseJdbcDao implements HorseDao {
       + "  , sex = ?"
       + "  , owner_id = ?"
       + " WHERE id = ?";
-
+  private static final String SQL_CREATE = "INSERT INTO " + TABLE_NAME +"(name,description,date_of_birth,sex,owner_id) VALUES(";
   private final JdbcTemplate jdbcTemplate;
 
   public HorseJdbcDao(
@@ -58,6 +60,29 @@ public class HorseJdbcDao implements HorseDao {
     }
 
     return horses.get(0);
+  }
+
+  @Override
+  public Horse create(HorseDetailDto horse) throws ValidationException, ConflictException {
+    LOG.trace("create({})",horse);
+    int created = jdbcTemplate.update(SQL_CREATE+"?,?,?,?,?);",
+            horse.name(),
+            horse.description(),
+            horse.dateOfBirth(),
+            horse.sex().toString(),
+            horse.ownerId());
+    if(created == 0){
+      throw new ValidationException("TODO",null);
+    }
+    LOG.info("created horse with ID:"+horse.id());
+    return new Horse()
+            .setId(horse.id())
+            .setName(horse.name())
+            .setDescription(horse.description())
+            .setDateOfBirth(horse.dateOfBirth())
+            .setSex(horse.sex())
+            .setOwnerId(horse.ownerId())
+            ;
   }
 
 
