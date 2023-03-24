@@ -5,6 +5,8 @@ import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
+import at.ac.tuwien.sepm.assignment.individual.type.Sex;
+
 import java.util.stream.Stream;
 
 /**
@@ -54,4 +56,14 @@ public interface HorseService {
    * @throws ConflictException if the update given for the horse is in conflict the data currently in the system (owner does not exist, …)
    */
   HorseDetailDto create(HorseDetailDto horse) throws ValidationException, ConflictException;
+
+  /**
+   * Filters the horses to find parents with given data {@code input, sex}
+   *
+   * @param input the input to filter for names of parents
+   * @param sex the sex to filter for parents
+   * @return the filtered horses
+   * @throws NotFoundException if no Horses are found for the given input and sex
+   */
+  Stream<HorseListDto> filter(String input, Sex sex) throws NotFoundException;
 }

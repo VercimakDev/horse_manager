@@ -10,6 +10,8 @@ import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
+
+import at.ac.tuwien.sepm.assignment.individual.type.Sex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -48,18 +50,29 @@ public class HorseEndpoint {
     }
   }
   @PostMapping
-  public void createHorse(@RequestBody HorseDetailDto horse){
-    LOG.info("POST trying to create Horse with the Name: "+ horse.name());
+  public HorseDetailDto createHorse(@RequestBody HorseDetailDto horse){
+    LOG.info("POST trying to create Horse with the Name: " + horse.name());
     try{
-      service.create(horse);
+      LOG.info("createHorse Father:" + horse.fatherId());
+      return service.create(horse);
     } catch(Exception e) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      logClientError(status,"Horse could not be created",e);
-      throw new ResponseStatusException(status,e.getMessage(),e);
+      logClientError(status,"Horse could not be created", e);
+      throw new ResponseStatusException(status, e.getMessage(), e);
     }
-
   }
 
+  @GetMapping("/{input}/{sex}")
+  public Stream<HorseListDto> getParentCandidates(@PathVariable String input,@PathVariable Sex sex) {
+    LOG.info("GET trying to filter Horses for input: " + input);
+    try{
+      return service.filter(input, sex);
+    } catch (Exception e) {
+      HttpStatus status = HttpStatus.BAD_REQUEST;
+      logClientError(status,"Horse could not be created", e);
+      throw new ResponseStatusException(status, e.getMessage(), e);
+    }
+  }
 
   @PutMapping("{id}")
   public HorseDetailDto update(@PathVariable long id, @RequestBody HorseDetailDto toUpdate) throws ValidationException, ConflictException {
@@ -73,6 +86,8 @@ public class HorseEndpoint {
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
+
+
 
 
   private void logClientError(HttpStatus status, String message, Exception e) {

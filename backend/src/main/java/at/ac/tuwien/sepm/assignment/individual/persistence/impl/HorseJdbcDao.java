@@ -31,7 +31,7 @@ public class HorseJdbcDao implements HorseDao {
       + "  , sex = ?"
       + "  , owner_id = ?"
       + " WHERE id = ?";
-  private static final String SQL_CREATE = "INSERT INTO " + TABLE_NAME +"(name,description,date_of_birth,sex,owner_id) VALUES(";
+  private static final String SQL_CREATE = "INSERT INTO " + TABLE_NAME +"(name,description,date_of_birth,sex,owner_id,father_id,mother_id) VALUES(";
   private final JdbcTemplate jdbcTemplate;
 
   public HorseJdbcDao(
@@ -63,18 +63,28 @@ public class HorseJdbcDao implements HorseDao {
   }
 
   @Override
+  public List<Horse> filter(String input, Sex sex) throws NotFoundException {
+    LOG.trace("filter({})", input, sex);
+    List<Horse> horses = jdbcTemplate.query(SQL_SELECT_ALL + " WHERE name ILIKE '%" + input + "%' AND sex ILIKE '" + sex.toString() + "' LIMIT 5;", this::mapRow);
+    LOG.info(horses.toString());
+    return horses;
+  }
+
+  @Override
   public Horse create(HorseDetailDto horse) throws ValidationException, ConflictException {
     LOG.trace("create({})",horse);
-    int created = jdbcTemplate.update(SQL_CREATE+"?,?,?,?,?);",
+    int created = jdbcTemplate.update(SQL_CREATE + "?,?,?,?,?,?,?);",
             horse.name(),
             horse.description(),
             horse.dateOfBirth(),
             horse.sex().toString(),
-            horse.ownerId());
+            horse.ownerId(),
+            horse.fatherId(),
+            horse.motherId());
     if(created == 0){
       throw new ValidationException("TODO",null);
     }
-    LOG.info("created horse with ID:"+horse.id());
+    LOG.info("created horse with name:" + horse.name() + " and father:" + horse.fatherId());
     return new Horse()
             .setId(horse.id())
             .setName(horse.name())
@@ -82,6 +92,8 @@ public class HorseJdbcDao implements HorseDao {
             .setDateOfBirth(horse.dateOfBirth())
             .setSex(horse.sex())
             .setOwnerId(horse.ownerId())
+            .setFather(horse.fatherId())
+            .setMother(horse.motherId())
             ;
   }
 

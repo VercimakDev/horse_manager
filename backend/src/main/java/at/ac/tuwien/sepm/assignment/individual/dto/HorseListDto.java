@@ -13,7 +13,9 @@ public record HorseListDto(
     String description,
     LocalDate dateOfBirth,
     Sex sex,
-    OwnerDto owner
+    OwnerDto owner,
+    HorseDetailDto father,
+    HorseDetailDto mother
 ) {
   public Long ownerId() {
     return owner == null

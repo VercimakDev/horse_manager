@@ -38,5 +38,8 @@ export class HorseService {
       horse
     );
   }
+  filter(input: string, sex: Sex): Observable<Horse[]>{
+    return this.http.get<Horse[]>(baseUri + `/${input}/${sex}`);
+  }
 
 }

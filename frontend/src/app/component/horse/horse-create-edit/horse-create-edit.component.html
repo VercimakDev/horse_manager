@@ -113,7 +113,14 @@
       </textarea>
     </div>
   </div>
-
+  <div class="form-group">
+    <label for="typeahead-format-father" >pick a father:</label>
+    <input id="typeahead-format-father" type="text" class="form-control" name="father" [ngbTypeahead]="searchMale" [resultFormatter]="formatter" [inputFormatter]="formatter" [(ngModel)]="horse.father" [readonly]="isReadOnly"/>
+    <button class="btn btn-primary" [hidden]="!isReadOnly">Details father</button>
+    <label for="typeahead-format-mother">pick a mother:</label>
+    <input id="typeahead-format-mother" type="text" class="form-control" name="mother" [ngbTypeahead]="searchFemale" [resultFormatter]="formatter" [inputFormatter]="formatter" [(ngModel)]="horse.mother" [readonly]="isReadOnly"/>
+    <button class="btn btn-primary" [hidden]="!isReadOnly">Details mother</button>
+  </div>
   <div class="mt-4 d-flex flex-row">
     <button type="button"
             class="btn btn-danger"

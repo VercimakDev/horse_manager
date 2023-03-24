@@ -8,8 +8,9 @@ import {Owner} from 'src/app/dto/owner';
 import {Sex} from 'src/app/dto/sex';
 import {HorseService} from 'src/app/service/horse.service';
 import {OwnerService} from 'src/app/service/owner.service';
-import {HttpClient} from "@angular/common/http";
-
+import {HttpClient} from '@angular/common/http';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs';
+import {NgbModal,NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 export enum HorseCreateEditMode {
   create,
   edit,
@@ -30,8 +31,6 @@ export class HorseCreateEditComponent implements OnInit {
     dateOfBirth: new Date(),
     sex: Sex.female,
   };
-
-
   constructor(
     private service: HorseService,
     private ownerService: OwnerService,
@@ -99,7 +98,6 @@ export class HorseCreateEditComponent implements OnInit {
       : `${owner.firstName} ${owner.lastName}`;
   }
 
-
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.horse);
     if (form.valid) {
@@ -122,10 +120,32 @@ export class HorseCreateEditComponent implements OnInit {
         },
         error: error => {
           console.error('Error creating horse', error);
-          // TODO show an error message to the user. Include and sensibly present the info from the backend!
-          this.notification.error('Could not create a new horse. Errorcode: '+error.status+', Errortext: '+error.error.errors);
+          this.notification.error('Could not create a new horse. Errorcode: ' + error.status + ', Errortext: ' + error.error.errors);
         }
       });
     }
   }
+  public filterByInput(input: any,sex: Sex): void {
+    console.log('Filtering for input: '+ input);
+    const observable = this.service.filter(input, sex);
+    observable.subscribe({
+      next: data => {
+      },
+      error: error => {
+        console.error('Error filtering for horses', error);
+        this.notification.error('Could not filter for horses. Errorcode: ' + error.status + ', Errortext: ' + error.error.errors);
+      }
+    });
+  }
+  formatter = (result: Horse) => result.name;
+  searchMale: (text: Observable<string>) => Observable<Horse[]> = (text: Observable<string>) =>
+    text.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap((temp) => this.service.filter(temp,Sex.male)));
+  searchFemale: (text: Observable<string>) => Observable<Horse[]> = (text: Observable<string>) =>
+    text.pipe(
+      debounceTime(10),
+      distinctUntilChanged(),
+      switchMap((temp) => this.service.filter(temp,Sex.female)));
 }

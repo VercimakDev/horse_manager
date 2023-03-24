@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.entity;
 
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
 import at.ac.tuwien.sepm.assignment.individual.type.Sex;
 import java.time.LocalDate;
 
@@ -13,6 +15,18 @@ public class Horse {
   private LocalDate dateOfBirth;
   private Sex sex;
   private Long ownerId;
+  private Long fatherId;
+  private Long motherId;
+
+  public Long getFatherId() {
+    return fatherId;
+  }
+
+
+  public Long getMotherId() {
+    return motherId;
+  }
+
 
   public Long getId() {
     return id;
@@ -79,5 +93,27 @@ public class Horse {
         + ", sex=" + sex
         + ", ownerId=" + ownerId
         + '}';
+  }
+
+  public Horse setFather(Long father) {
+    this.fatherId = father;
+    return this;
+  }
+
+  public Horse setMother(Long mother) {
+    this.motherId = mother;
+    return this;
+  }
+
+  public HorseDetailDto toDto(OwnerDto owner, HorseDetailDto father, HorseDetailDto mother) {
+    return new HorseDetailDto(
+            id,
+            name,
+            description,
+            dateOfBirth,
+            sex,
+            owner,
+            father,
+            mother);
   }
 }
