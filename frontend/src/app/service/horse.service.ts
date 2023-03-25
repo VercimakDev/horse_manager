@@ -58,7 +58,17 @@ export class HorseService {
   update(id: number, horse: Horse): Observable<Horse>{
     return this.http.put<Horse>(baseUri + `/${id}`,horse);
   }
+  /**
+   * Get the Horse with the given id.
+   *
+   * @param id the id of the horse
+   * @return an Observable for the looked up horse
+   */
   getById(id: number): Observable<Horse>{
     return this.http.get<Horse>(baseUri + `/${id}`);
+  }
+
+  delete(id: number): Observable<any>{
+    return this.http.delete(baseUri + `/${id}`);
   }
 }

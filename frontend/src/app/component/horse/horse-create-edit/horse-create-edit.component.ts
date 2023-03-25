@@ -163,6 +163,20 @@ export class HorseCreateEditComponent implements OnInit {
       });
     }
   }
+  public delete(){
+    const num =Number(this.route.snapshot.paramMap.get('id'));
+    const observable = this.service.delete(num);
+    observable.subscribe({
+      next: data => {
+        this.notification.success(`Horse ${this.horse.name} successfully deleted.`);
+        this.router.navigate(['/horses']);
+      },
+      error: error => {
+        console.error('Error deleting horse', error);
+        this.notification.error('Could not delete this horse. Errorcode: ' + error.status + ', Errortext: ' + error.error.errors);
+      }
+    });
+  }
   formatter = (result: Horse) => result.name;
   searchMale: (text: Observable<string>) => Observable<Horse[]> = (text: Observable<string>) =>
     text.pipe(

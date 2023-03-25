@@ -63,4 +63,12 @@ public interface HorseDao {
      * @throws ConflictException if the update given for the horse is in conflict the data currently in the system (owner does not exist, …)
      */
     Horse create(HorseDetailDto horse) throws ValidationException, ConflictException;
+    /**
+     * Deletes the horse with the given id {@code id}
+     *
+     * @param id the input to filter for the to be deleted horse
+     * @return the id of deleted horse
+     * @throws NotFoundException if no Horse is found for this id
+     */
+    long delete(long id) throws NotFoundException;
 }

@@ -86,6 +86,17 @@ public class HorseEndpoint {
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
+  @DeleteMapping("{id}")
+  public long delete(@PathVariable long id){
+    LOG.info("DELETE /{}",id);
+    try{
+      return service.delete(id);
+    }catch(Exception e){
+      HttpStatus status = HttpStatus.NOT_FOUND;
+      logClientError(status, "Horse to update not found", e);
+      throw new ResponseStatusException(status, e.getMessage(), e);
+    }
+  }
 
 
 

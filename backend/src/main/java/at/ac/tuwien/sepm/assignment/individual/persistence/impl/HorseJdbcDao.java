@@ -2,10 +2,8 @@ package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
-import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
-import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.type.Sex;
 import java.lang.invoke.MethodHandles;
@@ -34,6 +32,7 @@ public class HorseJdbcDao implements HorseDao {
           + "  , mother_id = ?"
       + " WHERE id = ?";
   private static final String SQL_CREATE = "INSERT INTO " + TABLE_NAME +"(name,description,date_of_birth,sex,owner_id,father_id,mother_id) VALUES(";
+  private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
   private final JdbcTemplate jdbcTemplate;
 
   public HorseJdbcDao(
@@ -73,7 +72,7 @@ public class HorseJdbcDao implements HorseDao {
   }
 
   @Override
-  public Horse create(HorseDetailDto horse) throws ValidationException, ConflictException {
+  public Horse create(HorseDetailDto horse){
     LOG.trace("create({})",horse);
     int created = jdbcTemplate.update(SQL_CREATE + "?,?,?,?,?,?,?);",
             horse.name(),
@@ -83,9 +82,6 @@ public class HorseJdbcDao implements HorseDao {
             horse.ownerId(),
             horse.fatherId(),
             horse.motherId());
-    if(created == 0){
-      throw new ValidationException("TODO",null);
-    }
     LOG.info("created horse with name:" + horse.name() + " and father:" + horse.fatherId());
     return new Horse()
             .setId(horse.id())
@@ -97,6 +93,15 @@ public class HorseJdbcDao implements HorseDao {
             .setFather(horse.fatherId())
             .setMother(horse.motherId())
             ;
+  }
+
+  @Override
+  public long delete(long id) throws NotFoundException {
+    int deleted = jdbcTemplate.update(SQL_DELETE, id);
+    if(deleted == 0){
+      throw new NotFoundException("Could not update horse with ID " + id + ", because it does not exist");
+    }
+    return id;
   }
 
 

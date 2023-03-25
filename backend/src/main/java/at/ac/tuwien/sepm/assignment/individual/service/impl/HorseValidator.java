@@ -83,4 +83,15 @@ public class HorseValidator {
         }
     }
 
+    public void validateId(Long id) throws ValidationException{
+        LOG.trace("validateId({})", id);
+        List<String> validationErrors = new ArrayList<>();
+        if (id == null) {
+            validationErrors.add("No ID given");
+        }
+        if (!validationErrors.isEmpty()) {
+            throw new ValidationException("Validation of horse for creation failed", validationErrors);
+        }
+    }
+
 }

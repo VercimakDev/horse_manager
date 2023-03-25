@@ -15,7 +15,6 @@ import at.ac.tuwien.sepm.assignment.individual.service.OwnerService;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -109,6 +108,11 @@ public class HorseServiceImpl implements HorseService {
         }
         return horses.stream()
                 .map(horse -> mapper.entityToListDto(horse, ownerMap, horses));
+    }
+    @Override
+    public long delete(long id) throws NotFoundException, ValidationException{
+        validator.validateId(id);
+        return dao.delete(id);
     }
 
 

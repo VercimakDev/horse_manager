@@ -66,4 +66,12 @@ public interface HorseService {
    * @throws NotFoundException if no Horses are found for the given input and sex
    */
   Stream<HorseListDto> filter(String input, Sex sex) throws NotFoundException;
+  /**
+   * Deletes the horse with the given id {@code id}
+   *
+   * @param id the input to filter for the to be deleted horse
+   * @return the id of deleted horse
+   * @throws NotFoundException if no Horse is found for this id
+   */
+  long delete(long id) throws NotFoundException, ValidationException;
 }
