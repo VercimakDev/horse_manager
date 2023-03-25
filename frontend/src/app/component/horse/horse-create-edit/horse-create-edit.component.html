@@ -1,7 +1,23 @@
 
 <h1 class="display-1">{{heading}}</h1>
-
-
+<div class="btn-group">
+  <a class="btn btn-sm responsive-warning-button"
+     [routerLink]="['../../edit', horse.id]"
+     *ngIf="modeIsDetails"
+     aria-label="Edit horse">
+    <i class="bi bi-pencil"></i>
+    Edit
+  </a>
+</div>
+<div class="btn-group">
+  <a class="btn btn-sm responsive-warning-button"
+     [routerLink]="['../../details', horse.id]"
+     *ngIf="modeIsEdit"
+     aria-label="Edit horse">
+    <i class="bi bi-pencil"></i>
+    Details
+  </a>
+</div>
 <form #form="ngForm" (ngSubmit)="onSubmit(form)">
   <div class="row">
     <!-- Start name and date of birth row -->
@@ -21,6 +37,7 @@
                  [class]="dynamicCssClassesForInput(horseNameModel)"
                  [(ngModel)]="horse.name"
                  #horseNameModel="ngModel"
+                 [readOnly]="modeIsDetails"
                  required
                  >
           <div class="invalid-feedback">
@@ -44,6 +61,7 @@
                  [class]="dynamicCssClassesForInput(horseDateOfBirthModel)"
                  [(ngModel)]="horse.dateOfBirth"
                  #horseDateOfBirthModel="ngModel"
+                 [readOnly]="modeIsDetails"
                  required
                  >
           <div class="invalid-feedback">
@@ -68,6 +86,7 @@
                   id="horseSex"
                   name="horseSex"
                   [(ngModel)]="horse.sex"
+                  [disabled]="modeIsDetails"
                   required
                   >
             <option value="FEMALE">Female</option>
@@ -91,6 +110,7 @@
           [(ngModel)]="horse.owner"
           [formatModel]="formatOwnerName"
           [suggestions]="ownerSuggestions"
+          [disabled]="modeIsDetails"
           ></app-autocomplete>
       </div>
     </div>
@@ -98,13 +118,13 @@
     <div class="mb-2 col-lg-6">
       <div class="row">
         <label for="typeahead-format-mother" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">Mother</label>
-        <input id="typeahead-format-mother" type="text" class="col-md-10 col-lg-8" name="mother" [ngbTypeahead]="searchFemale" [resultFormatter]="formatter" [inputFormatter]="formatter" [(ngModel)]="horse.mother"/>
+        <input id="typeahead-format-mother" type="text" class="col-md-10 col-lg-8" name="mother" [ngbTypeahead]="searchFemale" [resultFormatter]="formatter" [inputFormatter]="formatter" [(ngModel)]="horse.mother" [readOnly]="modeIsDetails" [routerLink]="modeIsDetails ? ['../../../horses/details', this.motherId] : []" (click)="modeIsDetails ? loadData(this.motherId): []"/>
       </div>
     </div>
     <div class="mb-2 col-lg-6">
       <div class="row">
         <label for="typeahead-format-father" class="col-form-label text-md-end text-muted col-md-2 col-lg-4" >Father</label>
-        <input id="typeahead-format-father" type="text" class="col-md-10 col-lg-8" name="father" [ngbTypeahead]="searchMale" [resultFormatter]="formatter" [inputFormatter]="formatter" [(ngModel)]="horse.father"/>
+        <input id="typeahead-format-father" type="text" class="col-md-10 col-lg-8" name="father" [ngbTypeahead]="searchMale" [resultFormatter]="formatter" [inputFormatter]="formatter" [(ngModel)]="horse.father" [readOnly]="modeIsDetails" [routerLink]="modeIsDetails ? ['../../../horses/details', this.fatherId] : []" (click)="modeIsDetails ? loadData(this.fatherId): []"/>
       </div>
     </div>
   </div>
@@ -124,6 +144,7 @@
                 id="horseDescription"
                 name="horseDescription"
                 [(ngModel)]="horse.description"
+                [readOnly]="modeIsDetails"
                 >
       </textarea>
     </div>
@@ -142,6 +163,7 @@
     <button type="submit"
             class="btn btn-primary"
             [disabled]="!form.valid"
+            *ngIf="!modeIsDetails"
             type="submit"
             >
       {{submitButtonText}}
