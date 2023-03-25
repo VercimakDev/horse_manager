@@ -38,8 +38,27 @@ export class HorseService {
       horse
     );
   }
+  /**
+   * Filter for parentsuggentions.
+   *
+   * @param input userinput to match with the horses name to give suggestions
+   * @param sex the sex of the parent to filter by
+   * @return an Observable for the horses meeting the parentcriteria
+   */
   filter(input: string, sex: Sex): Observable<Horse[]>{
     return this.http.get<Horse[]>(baseUri + `/${input}/${sex}`);
   }
-
+  /**
+   * Update the Horse with the given id.
+   *
+   * @param id the id of the horse that is to be changed
+   * @param horse the new data for the horse
+   * @return an Observable for the updated horse
+   */
+  update(id: number, horse: Horse): Observable<Horse>{
+    return this.http.put<Horse>(baseUri + `/${id}`,horse);
+  }
+  getById(id: number): Observable<Horse>{
+    return this.http.get<Horse>(baseUri + `/${id}`);
+  }
 }

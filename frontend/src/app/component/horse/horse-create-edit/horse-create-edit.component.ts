@@ -45,6 +45,8 @@ export class HorseCreateEditComponent implements OnInit {
     switch (this.mode) {
       case HorseCreateEditMode.create:
         return 'Create New Horse';
+      case HorseCreateEditMode.edit:
+        return 'Edit Horse';
       default:
         return '?';
     }
@@ -54,6 +56,8 @@ export class HorseCreateEditComponent implements OnInit {
     switch (this.mode) {
       case HorseCreateEditMode.create:
         return 'Create';
+      case HorseCreateEditMode.edit:
+        return 'Save';
       default:
         return '?';
     }
@@ -68,6 +72,8 @@ export class HorseCreateEditComponent implements OnInit {
     switch (this.mode) {
       case HorseCreateEditMode.create:
         return 'created';
+      case HorseCreateEditMode.edit:
+        return 'edited';
       default:
         return '?';
     }
@@ -81,6 +87,34 @@ export class HorseCreateEditComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
     });
+    switch (this.mode) {
+      case HorseCreateEditMode.edit:
+        const num =Number(this.route.snapshot.paramMap.get('id'));
+        const observable = this.service.getById(num);
+        observable.subscribe({
+          next: data => {
+            console.log('Horse given by id: ' + data.mother);
+            this.horse.name = data.name;
+            this.horse.description = data.description;
+            this.horse.sex = data.sex;
+            this.horse.dateOfBirth = data.dateOfBirth;
+            this.horse.owner = data.owner;
+            this.horse.father = data.father;
+            this.horse.mother = data.mother;
+            console.log('Mother:' + this.horse.mother);
+            if(data.mother){
+              //const mother: Observable<Horse>= data.mother;
+             // this.searchFemale(mother);
+            }
+            this.notification.success(`Horse ${this.horse.name} loaded successfully.`);
+          },
+          error: error => {
+            console.error('Error loading horse', error);
+            this.notification.error('Could not find a new horse with the given id. Errorcode: '
+              + error.status + ', Errortext: ' + error.error.errors);
+          }
+        });
+    }
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -109,6 +143,10 @@ export class HorseCreateEditComponent implements OnInit {
         case HorseCreateEditMode.create:
           observable = this.service.create(this.horse);
           break;
+        case HorseCreateEditMode.edit:
+          const num =Number(this.route.snapshot.paramMap.get('id'));
+          observable = this.service.update(num,this.horse);
+          break;
         default:
           console.error('Unknown HorseCreateEditMode', this.mode);
           return;
@@ -125,24 +163,19 @@ export class HorseCreateEditComponent implements OnInit {
       });
     }
   }
-  public filterByInput(input: any,sex: Sex): void {
-    console.log('Filtering for input: '+ input);
-    const observable = this.service.filter(input, sex);
-    observable.subscribe({
-      next: data => {
-      },
-      error: error => {
-        console.error('Error filtering for horses', error);
-        this.notification.error('Could not filter for horses. Errorcode: ' + error.status + ', Errortext: ' + error.error.errors);
-      }
-    });
-  }
   formatter = (result: Horse) => result.name;
   searchMale: (text: Observable<string>) => Observable<Horse[]> = (text: Observable<string>) =>
     text.pipe(
-      debounceTime(200),
+      debounceTime(10),
       distinctUntilChanged(),
-      switchMap((temp) => this.service.filter(temp,Sex.male)));
+      switchMap((temp) => {
+        if (temp.trim() === '') {
+          this.horse.father = undefined;
+          return of([]); // return an empty array if temp is an empty string
+        }
+        return this.service.filter(temp,Sex.male);
+      })
+    );
   searchFemale: (text: Observable<string>) => Observable<Horse[]> = (text: Observable<string>) =>
     text.pipe(
       debounceTime(10),

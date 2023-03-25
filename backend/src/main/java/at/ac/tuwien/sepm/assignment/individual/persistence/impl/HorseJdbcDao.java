@@ -30,6 +30,8 @@ public class HorseJdbcDao implements HorseDao {
       + "  , date_of_birth = ?"
       + "  , sex = ?"
       + "  , owner_id = ?"
+          + "  , father_id = ?"
+          + "  , mother_id = ?"
       + " WHERE id = ?";
   private static final String SQL_CREATE = "INSERT INTO " + TABLE_NAME +"(name,description,date_of_birth,sex,owner_id,father_id,mother_id) VALUES(";
   private final JdbcTemplate jdbcTemplate;
@@ -58,7 +60,7 @@ public class HorseJdbcDao implements HorseDao {
       // This should never happen!!
       throw new FatalException("Too many horses with ID %d found".formatted(id));
     }
-
+    LOG.info("Fatherid of the given horse: " + horses.get(0).getFatherId());
     return horses.get(0);
   }
 
@@ -107,6 +109,8 @@ public class HorseJdbcDao implements HorseDao {
         horse.dateOfBirth(),
         horse.sex().toString(),
         horse.ownerId(),
+        horse.fatherId(),
+        horse.motherId(),
         horse.id());
     if (updated == 0) {
       throw new NotFoundException("Could not update horse with ID " + horse.id() + ", because it does not exist");
@@ -131,6 +135,8 @@ public class HorseJdbcDao implements HorseDao {
         .setDateOfBirth(result.getDate("date_of_birth").toLocalDate())
         .setSex(Sex.valueOf(result.getString("sex")))
         .setOwnerId(result.getObject("owner_id", Long.class))
+            .setFather(result.getObject("father_id",Long.class))
+            .setMother(result.getObject("mother_id",Long.class))
         ;
   }
 }
