@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {HorseCreateEditComponent, HorseCreateEditMode} from './component/horse/horse-create-edit/horse-create-edit.component';
 import {HorseComponent} from './component/horse/horse.component';
 import {OwnerComponent} from './owner/owner.component';
+import {OwnerCreateComponent} from './owner/owner-create/owner-create.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'horses', pathMatch: 'full'},
@@ -14,6 +15,7 @@ const routes: Routes = [
   ]},
   {path: 'owners', children: [
       {path: '', component: OwnerComponent},
+      {path: 'create', component: OwnerCreateComponent},
     ]},
   {path: '**', redirectTo: 'horses'},
 

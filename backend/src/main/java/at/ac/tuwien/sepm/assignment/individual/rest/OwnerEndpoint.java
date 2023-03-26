@@ -1,18 +1,13 @@
 package at.ac.tuwien.sepm.assignment.individual.rest;
 
-import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
-import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
-import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
-import at.ac.tuwien.sepm.assignment.individual.dto.OwnerSearchDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.*;
 import at.ac.tuwien.sepm.assignment.individual.service.OwnerService;
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -39,6 +34,17 @@ public class OwnerEndpoint {
     } catch (Exception e) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
       logClientError(status, "Horse could not be created", e);
+      throw new ResponseStatusException(status, e.getMessage(), e);
+    }
+  }
+  @PostMapping
+  public OwnerDto createOwner(@RequestBody OwnerCreateDto owner){
+    LOG.info("POST trying to create Owner with the Firstname: " + owner.firstName());
+    try{
+      return service.create(owner);
+    } catch(Exception e) {
+      HttpStatus status = HttpStatus.BAD_REQUEST;
+      logClientError(status,"Owner could not be created", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
