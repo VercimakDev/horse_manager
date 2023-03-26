@@ -61,6 +61,13 @@ public class OwnerServiceImpl implements OwnerService {
   }
 
   @Override
+  public Stream<OwnerDto> getAll() {
+    LOG.trace("getAll");
+    return dao.getAll().stream()
+            .map(mapper::entityToDto);
+  }
+
+  @Override
   public OwnerDto create(OwnerCreateDto newOwner) throws ValidationException {
     LOG.trace("create({})", newOwner);
     // TODO validation

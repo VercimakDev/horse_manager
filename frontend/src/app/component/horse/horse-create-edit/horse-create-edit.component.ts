@@ -165,6 +165,12 @@ export class HorseCreateEditComponent implements OnInit {
       if (this.horse.description === '') {
         delete this.horse.description;
       }
+      if (typeof this.horse.mother === 'string') { // can be string if input is left as a string, no horse selected
+        delete this.horse.mother;
+      }
+      if (typeof this.horse.father === 'string') { // can be string if input is left as a string, no horse selected
+        delete this.horse.father;
+      }
       let observable: Observable<Horse>;
       switch (this.mode) {
         case HorseCreateEditMode.create:

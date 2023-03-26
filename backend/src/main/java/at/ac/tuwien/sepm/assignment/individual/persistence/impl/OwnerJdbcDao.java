@@ -26,6 +26,7 @@ import org.springframework.stereotype.Repository;
 public class OwnerJdbcDao implements OwnerDao {
   private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static final String TABLE_NAME = "owner";
+  private static final String SQL_SELECT = "SELECT * FROM " + TABLE_NAME;
   private static final String SQL_SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
   private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME + " WHERE id IN (:ids)";
   private static final String SQL_SELECT_SEARCH = "SELECT * FROM " + TABLE_NAME
@@ -102,6 +103,12 @@ public class OwnerJdbcDao implements OwnerDao {
       params.add(maxAmount);
     }
     return jdbcTemplate.query(query, this::mapRow, params.toArray());
+  }
+
+  @Override
+  public Collection<Owner> getAll() {
+    LOG.trace("getAll");
+    return jdbcTemplate.query(SQL_SELECT, this::mapRow);
   }
 
   private Owner mapRow(ResultSet resultSet, int i) throws SQLException {

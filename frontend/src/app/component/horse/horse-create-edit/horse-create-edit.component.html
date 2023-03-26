@@ -1,6 +1,7 @@
 
 <h1 class="display-1">{{heading}}</h1>
-<div class="btn-group">
+<div class="d-flex flex-row w-auto">
+  <span style="flex: 1"></span>
   <a class="btn btn-sm responsive-warning-button"
      [routerLink]="['../../edit', horse.id]"
      *ngIf="modeIsDetails"
@@ -9,7 +10,8 @@
     Edit
   </a>
 </div>
-<div class="btn-group">
+<div class="d-flex flex-row w-auto">
+  <span style="flex: 1"></span>
   <a class="btn btn-sm responsive-warning-button"
      [routerLink]="['../../details', horse.id]"
      *ngIf="modeIsEdit"

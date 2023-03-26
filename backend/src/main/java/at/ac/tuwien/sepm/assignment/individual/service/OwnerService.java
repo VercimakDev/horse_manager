@@ -45,6 +45,12 @@ public interface OwnerService {
   Stream<OwnerDto> search(OwnerSearchDto searchParameters);
 
   /**
+   * Get all Owners.
+   * @return a stream containing all owners
+   */
+  Stream<OwnerDto> getAll();
+
+  /**
    * Create a new owner in the persistent data store.
    *
    * @param newOwner the data for the new owner

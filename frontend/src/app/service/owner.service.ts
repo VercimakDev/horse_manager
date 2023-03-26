@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Owner } from '../dto/owner';
+import {Horse} from "../dto/horse";
 
 const baseUri = environment.backendUrl + '/owners';
 
@@ -20,5 +21,13 @@ export class OwnerService {
       .set('name', name)
       .set('maxAmount', limitTo);
     return this.http.get<Owner[]>(baseUri, { params });
+  }
+  /**
+   * Get all horses stored in the system
+   *
+   * @return observable list of found horses.
+   */
+  getAll(): Observable<Owner[]> {
+    return this.http.get<Owner[]>(baseUri);
   }
 }

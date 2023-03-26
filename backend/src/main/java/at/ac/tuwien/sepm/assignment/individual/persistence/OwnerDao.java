@@ -43,6 +43,12 @@ public interface OwnerDao {
   Collection<Owner> search(OwnerSearchDto searchParameters);
 
   /**
+   * Get all owners
+   * @return a stream containing all owners
+   */
+  Collection<Owner> getAll();
+
+  /**
    * Create a new owner in the persistent data store.
    *
    * @param newOwner the data to create the new owner from
