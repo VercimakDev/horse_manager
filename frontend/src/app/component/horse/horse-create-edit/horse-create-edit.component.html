@@ -40,6 +40,7 @@
                  [(ngModel)]="horse.name"
                  #horseNameModel="ngModel"
                  [readOnly]="modeIsDetails"
+                 [disabled]="modeIsDetails"
                  required
                  >
           <div class="invalid-feedback">
@@ -64,6 +65,7 @@
                  [(ngModel)]="horse.dateOfBirth"
                  #horseDateOfBirthModel="ngModel"
                  [readOnly]="modeIsDetails"
+                 [disabled]="modeIsDetails"
                  required
                  >
           <div class="invalid-feedback">
@@ -132,8 +134,8 @@
           [formatModel]="formatParentName"
           [suggestions]="fatherSuggestions"
           [disabled]="modeIsDetails"
-          [routerLink]="modeIsDetails ? ['../../../horses/details', this.fatherId] : []"
-          (click)="modeIsDetails ? loadData(this.fatherId): []"
+          [routerLink]="modeIsDetails && this.fatherId ? ['../../../horses/details', this.fatherId] : []"
+          (click)="modeIsDetails && this.fatherId ? loadData(this.fatherId): []"
         ></app-autocomplete>
       </div>
     </div>
@@ -152,8 +154,8 @@
           [formatModel]="formatParentName"
           [suggestions]="motherSuggestions"
           [disabled]="modeIsDetails"
-          [routerLink]="modeIsDetails ? ['../../../horses/details', this.motherId] : []"
-          (click)="modeIsDetails ? loadData(this.motherId): []"
+          [routerLink]="modeIsDetails && this.motherId ? ['../../../horses/details', this.motherId] : []"
+          (click)="modeIsDetails && this.motherId ? loadData(this.motherId): []"
         ></app-autocomplete>
       </div>
     </div>
@@ -175,6 +177,7 @@
                 name="horseDescription"
                 [(ngModel)]="horse.description"
                 [readOnly]="modeIsDetails"
+                [disabled]="modeIsDetails"
                 >
       </textarea>
     </div>

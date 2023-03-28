@@ -41,19 +41,20 @@ public class HorseEndpoint {
 
   @GetMapping
   public Stream<HorseListDto> searchHorses(HorseSearchDto searchParameters) {
-    if (service.allFieldsNull(searchParameters)) {
-      LOG.info("GET ALL HORSES " + BASE_PATH);
-      return service.allHorses();
-    } else {
-      LOG.info("GET filter Horses for input: " + searchParameters);
-      try {
+    try {
+      if (service.allFieldsNull(searchParameters)) {
+        LOG.info("Executing GET ALL HORSES " + BASE_PATH);
+        return service.allHorses();
+      } else {
+        LOG.info("Executing GET filter Horses for input: " + searchParameters);
 
         return service.search(searchParameters);
-      } catch (Exception e) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        logClientError(status, "Horse could not be created", e);
-        throw new ResponseStatusException(status, e.getMessage(), e);
       }
+    } catch (NotFoundException e) {
+      HttpStatus status = HttpStatus.NOT_FOUND;
+      logClientError(status, "Horse could not be created", e);
+      LOG.error("An NotFoundException was thrown: " + e.getMessage());
+      throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
 
@@ -120,7 +121,7 @@ public class HorseEndpoint {
   }
 
   @GetMapping("{id}/familytree/{generations}")
-  public HorseDetailDto getTree(@PathVariable long id, @PathVariable int generations){
+  public HorseDetailDto getTree(@PathVariable long id, @PathVariable int generations) {
     LOG.info("GET GENERATIONS " + BASE_PATH + "/{}" + "/{}", id, generations);
     try {
       return service.getById(id, generations);
@@ -130,7 +131,6 @@ public class HorseEndpoint {
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
-
 
 
   private void logClientError(HttpStatus status, String message, Exception e) {

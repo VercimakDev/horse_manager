@@ -35,8 +35,14 @@ public class HorseValidator {
         validationErrors.add("Horse description too long: longer than 4095 characters");
       }
     }
+    if (horse.sex() != null) {
+      if (!(horse.sex() == Sex.MALE || horse.sex() == Sex.FEMALE)) {
+        validationErrors.add("Invalid sex for the Horse");
+      }
+    } else {
+      validationErrors.add("The sex of the horse is required");
+    }
 
-    // TODO this is not complete…
 
     if (!validationErrors.isEmpty()) {
       throw new ValidationException("Validation of horse for update failed", validationErrors);
@@ -93,5 +99,4 @@ public class HorseValidator {
       throw new ValidationException("Validation of horse for creation failed", validationErrors);
     }
   }
-
 }

@@ -46,7 +46,7 @@ public class HorseServiceImpl implements HorseService {
   }
 
   @Override
-  public Stream<HorseListDto> allHorses() {
+  public Stream<HorseListDto> allHorses() throws NotFoundException {
     LOG.trace("allHorses()");
     var horses = dao.getAll();
     var ownerIds = horses.stream()
@@ -57,7 +57,7 @@ public class HorseServiceImpl implements HorseService {
     try {
       ownerMap = ownerService.getAllById(ownerIds);
     } catch (NotFoundException e) {
-      throw new FatalException("Horse, that is already persisted, refers to non-existing owner", e);
+      throw new NotFoundException("Horse, that is already persisted, refers to non-existing owner", e);
     }
     return horses.stream()
         .map(horse -> mapper.entityToListDto(horse, ownerMap, horses));
@@ -78,12 +78,22 @@ public class HorseServiceImpl implements HorseService {
 
   @Override
   public HorseDetailDto getById(long id) throws NotFoundException {
-    LOG.trace("details({})", id);
-    Horse horse = dao.getById(id);
-    var horses = dao.getAll();
-    return mapper.entityToDetailDto(
-        horse,
-        ownerMapForSingleId(horse.getOwnerId()), horses);
+    try {
+      LOG.trace("details({})", id);
+      Horse horse = dao.getById(id);
+      var horses = dao.getAll();
+      var ownerIds = ownerService.getAll()
+          .filter(Objects::nonNull)
+          .map(OwnerDto::id)
+          .collect(Collectors.toUnmodifiableSet());
+      Map<Long, OwnerDto> ownerMap = ownerService.getAllById(ownerIds);
+      return mapper.entityToDetailDto(
+          horse,
+          ownerMap, horses);
+    } catch (NotFoundException e) {
+      throw new NotFoundException("A horse with that id could not be found", e);
+    }
+
   }
 
   @Override
@@ -117,19 +127,20 @@ public class HorseServiceImpl implements HorseService {
 
   @Override
   public Stream<HorseListDto> filter(String input, Sex sex) throws NotFoundException {
-    var horses = dao.filter(input, sex);
-    var ownerIds = horses.stream()
-        .map(Horse::getOwnerId)
-        .filter(Objects::nonNull)
-        .collect(Collectors.toUnmodifiableSet());
-    Map<Long, OwnerDto> ownerMap;
     try {
+      var horses = dao.filter(input, sex);
+      var ownerIds = horses.stream()
+          .map(Horse::getOwnerId)
+          .filter(Objects::nonNull)
+          .collect(Collectors.toUnmodifiableSet());
+      Map<Long, OwnerDto> ownerMap;
       ownerMap = ownerService.getAllById(ownerIds);
+      return horses.stream()
+          .map(horse -> mapper.entityToListDto(horse, ownerMap, horses));
     } catch (NotFoundException e) {
-      throw new FatalException("Horse, that is already persisted, refers to non-existing owner", e);
+      throw new NotFoundException("Horse, that is already persisted, refers to non-existing owner", e);
     }
-    return horses.stream()
-        .map(horse -> mapper.entityToListDto(horse, ownerMap, horses));
+
   }
 
   @Override

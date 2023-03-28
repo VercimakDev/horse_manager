@@ -86,7 +86,7 @@ public class HorseMapper {
     if (horse == null || generations == 0) {
       return null;
     }
-    if (generations == 1){
+    if (generations == 1) {
       return new HorseDetailDto(
           horse.getId(),
           horse.getName(),
@@ -169,7 +169,7 @@ public class HorseMapper {
   }
 
   private HorseDetailDto getFatherLimited(Horse horse, List<Horse> horses, Map<Long, OwnerDto> owners, int generations) {
-    if(generations == 0){
+    if (generations == 0) {
       return null;
     }
     HorseDetailDto parent = null;
@@ -186,14 +186,14 @@ public class HorseMapper {
       if (!found) {
         throw new FatalException("Given horses list does not contain father of this Horse (%d)".formatted(horse.getId()));
       }
-      parent = entityToDetailDtoLimited(father, owners, horses, generations-1);
+      parent = entityToDetailDtoLimited(father, owners, horses, generations - 1);
       // parent = father.toDto(getOwner(father, owners), getFather(father, horses, owners), getMother(father, horses, owners));
     }
     return parent;
   }
 
   private HorseDetailDto getMotherLimited(Horse horse, List<Horse> horses, Map<Long, OwnerDto> owners, int generations) {
-    if(generations == 0){
+    if (generations == 0) {
       return null;
     }
     HorseDetailDto parent = null;
@@ -210,7 +210,7 @@ public class HorseMapper {
       if (!found) {
         throw new FatalException("Given horses list does not contain mother of this Horse (%d)".formatted(horse.getId()));
       }
-      parent = entityToDetailDtoLimited(mother, owners, horses, generations-1);
+      parent = entityToDetailDtoLimited(mother, owners, horses, generations - 1);
       // parent = father.toDto(getOwner(father, owners), getFather(father, horses, owners), getMother(father, horses, owners));
     }
     return parent;

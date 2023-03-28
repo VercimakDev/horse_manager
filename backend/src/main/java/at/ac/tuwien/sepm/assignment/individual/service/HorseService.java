@@ -21,7 +21,7 @@ public interface HorseService {
    *
    * @return list of all stored horses
    */
-  Stream<HorseListDto> allHorses();
+  Stream<HorseListDto> allHorses() throws NotFoundException;
 
 
   /**
