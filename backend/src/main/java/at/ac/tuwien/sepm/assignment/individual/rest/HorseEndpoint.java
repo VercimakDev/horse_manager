@@ -32,10 +32,20 @@ public class HorseEndpoint {
 
   @GetMapping
   public Stream<HorseListDto> searchHorses(HorseSearchDto searchParameters) {
-    LOG.info("GET " + BASE_PATH);
-    LOG.debug("request parameters: {}", searchParameters);
-    // TODO We have the request params in the DTO now, but don't do anything with them yet…
-    return service.allHorses();
+    if(service.allFieldsNull(searchParameters)) {
+      LOG.info("GET ALL HORSES " + BASE_PATH);
+      return service.allHorses();
+    }else{
+      LOG.info("GET filter Horses for input: " + searchParameters);
+      try{
+
+        return service.search(searchParameters);
+      } catch (Exception e) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        logClientError(status,"Horse could not be created", e);
+        throw new ResponseStatusException(status, e.getMessage(), e);
+      }
+    }
   }
 
   @GetMapping("{id}")

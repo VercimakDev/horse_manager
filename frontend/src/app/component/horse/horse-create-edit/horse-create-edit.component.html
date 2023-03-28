@@ -116,17 +116,45 @@
           ></app-autocomplete>
       </div>
     </div>
-    <!-- End sex and owner row -->
+    <!-- New Mother, Father autocomplete -->
     <div class="mb-2 col-lg-6">
       <div class="row">
-        <label for="typeahead-format-mother" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">Mother</label>
-        <input id="typeahead-format-mother" type="text" class="col-md-10 col-lg-8" name="mother" [ngbTypeahead]="searchFemale" [resultFormatter]="formatter" [inputFormatter]="formatter" [(ngModel)]="horse.mother" [readOnly]="modeIsDetails" [routerLink]="modeIsDetails ? ['../../../horses/details', this.motherId] : []" (click)="modeIsDetails ? loadData(this.motherId): []"/>
+        <label for="father" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Father
+        </label>
+        <app-autocomplete
+          id="father"
+          name="father"
+          class="col-md-10 col-lg-8"
+          textInputClass="form-control"
+          valueNeedsToMatchSuggestion="true"
+          [(ngModel)]="horse.father"
+          [formatModel]="formatParentName"
+          [suggestions]="fatherSuggestions"
+          [disabled]="modeIsDetails"
+          [routerLink]="modeIsDetails ? ['../../../horses/details', this.fatherId] : []"
+          (click)="modeIsDetails ? loadData(this.fatherId): []"
+        ></app-autocomplete>
       </div>
     </div>
     <div class="mb-2 col-lg-6">
       <div class="row">
-        <label for="typeahead-format-father" class="col-form-label text-md-end text-muted col-md-2 col-lg-4" >Father</label>
-        <input id="typeahead-format-father" type="text" class="col-md-10 col-lg-8" name="father" [ngbTypeahead]="searchMale" [resultFormatter]="formatter" [inputFormatter]="formatter" [(ngModel)]="horse.father" [readOnly]="modeIsDetails" [routerLink]="modeIsDetails ? ['../../../horses/details', this.fatherId] : []" (click)="modeIsDetails ? loadData(this.fatherId): []"/>
+        <label for="mother" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Mother
+        </label>
+        <app-autocomplete
+          id="mother"
+          name="mother"
+          class="col-md-10 col-lg-8"
+          textInputClass="form-control"
+          valueNeedsToMatchSuggestion="true"
+          [(ngModel)]="horse.mother"
+          [formatModel]="formatParentName"
+          [suggestions]="motherSuggestions"
+          [disabled]="modeIsDetails"
+          [routerLink]="modeIsDetails ? ['../../../horses/details', this.motherId] : []"
+          (click)="modeIsDetails ? loadData(this.motherId): []"
+        ></app-autocomplete>
       </div>
     </div>
   </div>

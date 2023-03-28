@@ -64,7 +64,7 @@ public class HorseMapper {
             return null;
         }
 
-        LOG.info("Father: " + getFather(horse,horses, owners));
+
         return new HorseDetailDto(
                 horse.getId(),
                 horse.getName(),
@@ -82,23 +82,24 @@ public class HorseMapper {
         OwnerDto owner = null;
         var ownerId = horse.getOwnerId();
         if (ownerId != null) {
-            if (!owners.containsKey(ownerId)) {
-                throw new FatalException("Given owner map does not contain owner of this Horse (%d)".formatted(horse.getId()));
+            if(owners != null) {
+                if (!owners.containsKey(ownerId)) {
+                    throw new FatalException("Given owner map does not contain owner of this Horse (%d)".formatted(horse.getId()));
+                }
+                owner = owners.get(ownerId);
             }
-            owner = owners.get(ownerId);
         }
         return owner;
     }
 
     private HorseDetailDto getFather(Horse horse, List<Horse> horses, Map<Long, OwnerDto> owners) {
         HorseDetailDto parent = null;
-        LOG.info("Father_ID: " + horse.getFatherId());
         var parentId = horse.getFatherId();
         if (parentId != null) {
             boolean found = false;
             Horse father = null;
             for (Horse h:horses) {
-                if(Objects.equals(h.getId(), parentId)){
+                if(h.getId().equals(parentId)){
                     found = true;
                     father = h;
                 }
@@ -119,13 +120,13 @@ public class HorseMapper {
             boolean found = false;
             Horse mother = null;
             for (Horse h:horses) {
-                if(Objects.equals(h.getId(), parentId)){
+                if(h.getId().equals(parentId)){
                     found = true;
                     mother = h;
                 }
             }
             if (!found) {
-                throw new FatalException("Given horses list does not contain father of this Horse (%d)".formatted(horse.getId()));
+                throw new FatalException("Given horses list does not contain mother of this Horse (%d)".formatted(horse.getId()));
             }
             parent = entityToDetailDto(mother, owners, horses);
         }

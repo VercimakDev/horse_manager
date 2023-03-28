@@ -31,7 +31,7 @@
   </a>
 </div>
 
-<form class="d-flex flex-row w-auto mb-3" (submit)="reloadHorses()">
+<form class="d-flex flex-row w-auto mb-3"  (submit)="reloadHorses()" >
   <!-- this button is here, just so that simple submitting of this form
        to reload the horses, is possible -->
   <button type="submit" hidden="true">submit</button>
@@ -41,6 +41,8 @@
     </label>
     <input type="text" name="searchHorseName"
            class="form-control"
+           [(ngModel)]="searchHorse.name"
+           (input)="searchHorses()"
            >
   </div>
   <div class="flex-grow-1 ms-1">
@@ -49,6 +51,8 @@
     </label>
     <input type="text" name="searchHorseDescription"
            class="form-control"
+           [(ngModel)]="searchHorse.description"
+           (input)="searchHorses()"
            >
   </div>
   <div class="ms-1">
@@ -62,6 +66,8 @@
            pattern="\d{4}-\d{2}-\d{2}"
            placeholder="yyyy-mm-dd"
            class="form-control"
+           [(ngModel)]="searchHorse.bornBefore"
+           (input)="searchHorses()"
            >
   </div>
   <div class="ms-1">
@@ -70,9 +76,11 @@
     </label>
     <select name="searchHorseSex"
             class="form-select"
+            [(ngModel)]="searchHorse.sex"
+            (change)="searchHorses()"
             >
-      <option></option>
-      <option value="FEMALE">Female</option>
+      <option [ngValue]="null"></option>
+      <option value="FEMALE" >Female</option>
       <option value="MALE">Male</option>
     </select>
   </div>
@@ -80,11 +88,17 @@
     <label for="searchHorseOwner" class="col-form-label">
       Owner
     </label>
-    <app-autocomplete name="searchHorseOwner"
-                      textInputClass="form-control"
-                      valueNeedsToMatchSuggestion="false"
-                      >
-    </app-autocomplete>
+    <app-autocomplete
+      id="searchHorseOwner"
+      name="searchHorseOwner"
+      class="col-md-10 col-lg-8"
+      textInputClass="form-control"
+      valueNeedsToMatchSuggestion="true"
+      [(ngModel)]="searchHorse.owner"
+      [formatModel]="formatOwnerName"
+      [suggestions]="ownerSuggestions"
+      (input)="searchHorses()"
+    ></app-autocomplete>
   </div>
 </form>
 
@@ -99,7 +113,7 @@
       <th class="min-width">Actions</th>
     </thead>
     <tbody>
-      <tr *ngFor="let horse of horses" class="center-td">
+    <tr *ngFor="let horse of horses" class="center-td">
         <td>{{horse.name}}</td>
         <td>{{horse.description}}</td>
         <td>{{dateOfBirthAsLocaleDate(horse)}}</td>
@@ -117,7 +131,12 @@
                aria-label="Edit horse">
               <i class="bi bi-pencil"></i>
             </a>
+            <a class="btn btn-sm responsive-warning-button"
+               aria-label="Delete horse" (click)="delete(horse.id)">
+              <i class="bi-x-square"></i>
+            </a>
           </div>
+
         </td>
       </tr>
     </tbody>

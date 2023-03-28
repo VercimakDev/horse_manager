@@ -2,11 +2,14 @@ package at.ac.tuwien.sepm.assignment.individual.service;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
+import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
 import at.ac.tuwien.sepm.assignment.individual.type.Sex;
 
+import java.time.LocalDate;
 import java.util.stream.Stream;
 
 /**
@@ -74,4 +77,22 @@ public interface HorseService {
    * @throws NotFoundException if no Horse is found for this id
    */
   long delete(long id) throws NotFoundException, ValidationException;
+
+  /**
+   * Filters the horses to find horses with given data {@code horse}
+   *
+   * @param horse the searched for horseinput
+   * @return the filtered horses
+   * @throws NotFoundException if no Horses are found for the given horse
+   */
+    Stream<HorseListDto> search(HorseSearchDto horse);
+
+  /**
+   * Looks at all the fields of the given horseSearchDto and checks them for being null {@code horse}
+   *
+   * @param horse the horse that schould be checked
+   * @return true if all fields are null, false otherwise
+   * @throws FatalException if the fields can not be checked
+   */
+  boolean allFieldsNull(HorseSearchDto horse) throws FatalException;
 }

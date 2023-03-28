@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
@@ -10,6 +12,7 @@ import java.lang.invoke.MethodHandles;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -102,6 +105,65 @@ public class HorseJdbcDao implements HorseDao {
       throw new NotFoundException("Could not update horse with ID " + id + ", because it does not exist");
     }
     return id;
+  }
+
+  @Override
+  public List<Horse> search(HorseSearchDto horse, List<OwnerDto> ownerMatchingIDs) {
+    LOG.trace("search({})", horse);
+    String preparedStatement = SQL_SELECT_ALL + " WHERE";
+    int ands = 0;
+    if(horse.name() != null && !horse.name().isBlank()){
+      preparedStatement += " name ILIKE '%" + horse.name() + "%'";
+      ands++;
+    }
+    if(horse.description() != null && !horse.description().isBlank()){
+      if(addAnds(ands)) {
+        preparedStatement += " AND ";
+      }else{
+        ands++;
+      }
+      preparedStatement += " description ILIKE '%" + horse.description() + "%'";
+    }
+    if(horse.bornBefore() != null){
+      if(addAnds(ands)) {
+        preparedStatement += " AND ";
+      }else{
+        ands++;
+      }
+      preparedStatement += " date_of_birth < '" + horse.bornBefore().toString()+"'";
+    }
+    if(horse.sex() != null){
+      if(addAnds(ands)) {
+        preparedStatement += " AND ";
+      }else{
+        ands++;
+      }
+      preparedStatement += " sex ILIKE '" + horse.sex().toString() + "%'";
+    }
+    if(ownerMatchingIDs != null && ownerMatchingIDs.size() !=0){
+      if(addAnds(ands)) {
+        preparedStatement += " AND ";
+      }else{
+        ands++;
+      }
+      StringBuilder sb = new StringBuilder();
+      sb.append('(');
+      for (OwnerDto owner:ownerMatchingIDs) {
+        if(ownerMatchingIDs.get(ownerMatchingIDs.size()-1) == owner) {
+          sb.append("owner_id = " + owner.id() + ")");
+        }else {
+          sb.append("owner_id = " + owner.id() + " OR ");
+        }
+      }
+      preparedStatement += sb.toString();
+    }
+    LOG.info("Getting query for this statement: " + preparedStatement);
+    List<Horse> horses = jdbcTemplate.query(preparedStatement, this::mapRow);
+    LOG.info(horses.toString());
+    return horses;
+  }
+  public boolean addAnds(int ands){
+    return ands > 0;
   }
 
 

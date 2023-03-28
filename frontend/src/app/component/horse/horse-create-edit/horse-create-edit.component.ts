@@ -2,20 +2,19 @@ import {Component, OnInit} from '@angular/core';
 import {NgForm, NgModel} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {Observable, of} from 'rxjs';
+import {debounceTime, distinctUntilChanged, Observable, of, switchMap} from 'rxjs';
 import {Horse} from 'src/app/dto/horse';
 import {Owner} from 'src/app/dto/owner';
 import {Sex} from 'src/app/dto/sex';
 import {HorseService} from 'src/app/service/horse.service';
 import {OwnerService} from 'src/app/service/owner.service';
 import {HttpClient} from '@angular/common/http';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs';
-import {NgbModal,NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+
 export enum HorseCreateEditMode {
   create,
   edit,
   details,
-};
+}
 
 @Component({
   selector: 'app-horse-create-edit',
@@ -94,6 +93,14 @@ export class HorseCreateEditComponent implements OnInit {
     ? of([])
     : this.ownerService.searchByName(input, 5);
 
+  fatherSuggestions = (input: string) => (input === '')
+    ? of ([])
+    : this.service.filter(input, Sex.male);
+
+  motherSuggestions = (input: string) => (input === '')
+    ? of ([])
+    : this.service.filter(input, Sex.female);
+
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
@@ -154,6 +161,13 @@ export class HorseCreateEditComponent implements OnInit {
       ? ''
       : `${owner.firstName} ${owner.lastName}`;
   }
+
+  public formatParentName(parent: Horse | null | undefined): string {
+    return (parent == null)
+      ? ''
+      : `${parent.name}`;
+  }
+
   public switchToEdit(): void {
     console.log('Horseid:  ' + this.horse.id);
     this.router.navigate(['edit',this.horse.id]);

@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepm.assignment.individual.service.impl;
 
-import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
-import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
-import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.*;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
@@ -14,7 +12,9 @@ import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
 import at.ac.tuwien.sepm.assignment.individual.service.OwnerService;
 
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -84,10 +84,10 @@ public class HorseServiceImpl implements HorseService {
 
     @Override
     public HorseDetailDto create(HorseDetailDto horse) throws ValidationException, ConflictException {
+        LOG.trace("create({})", horse);
         validator.validateForCreation(horse);
         var horses = dao.getAll();
         var createdHorse = dao.create(horse);
-        LOG.info("Create Service Father:" + horse.fatherId());
         return mapper.entityToDetailDto(
                 createdHorse,
                 ownerMapForSingleId(createdHorse.getOwnerId()), horses);
@@ -113,6 +113,56 @@ public class HorseServiceImpl implements HorseService {
     public long delete(long id) throws NotFoundException, ValidationException{
         validator.validateId(id);
         return dao.delete(id);
+    }
+
+    @Override
+    public Stream<HorseListDto> search(HorseSearchDto horse) {
+        OwnerSearchDto ownerSearch = null;
+        List<OwnerDto> ownerMatchingIDs = null;
+        if(horse.ownerName() != null){
+            ownerSearch = new OwnerSearchDto(horse.ownerName(),null);
+            ownerMatchingIDs = ownerService.search(ownerSearch).toList();
+        }
+        var horses = dao.search(horse, ownerMatchingIDs);
+        var allHorses = dao.getAll();
+        var ownerIds = ownerService.getAll()
+                .filter(Objects::nonNull)
+                .map(OwnerDto::id)
+                .collect(Collectors.toUnmodifiableSet());
+        Map<Long, OwnerDto> ownerMap;
+        try {
+            LOG.info("This are the owner_ids:" + ownerIds.toString());
+            ownerMap = ownerService.getAllById(ownerIds);
+        } catch (NotFoundException e) {
+            throw new FatalException("Horse, that is already persisted, refers to non-existing owner", e);
+        }
+        return horses.stream()
+                .map(h -> mapper.entityToListDto(h, ownerMap, allHorses));
+    }
+    @Override
+    public boolean allFieldsNull(HorseSearchDto horse) throws FatalException {
+        Class<?> recordClass = horse.getClass();
+        Field[] fields = recordClass.getDeclaredFields();
+
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                Object value = field.get(horse);
+
+                if (value != null) {
+                    if (value instanceof String && !((String) value).isEmpty()) {
+                        return false; // Field is not null or empty, return false
+                    }
+                    if(!(value instanceof String)){
+                        return false;
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                throw new FatalException("Could not check the fields for NULL or EMPTY");
+            }
+        }
+
+        return true; // All fields are null or empty, return true
     }
 
 
