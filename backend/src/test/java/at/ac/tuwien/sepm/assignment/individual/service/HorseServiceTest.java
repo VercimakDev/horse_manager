@@ -6,7 +6,9 @@ import static org.assertj.core.api.Assertions.tuple;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseListDto;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.type.Sex;
+
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,15 +22,15 @@ public class HorseServiceTest {
   HorseService horseService;
 
   @Test
-  public void getAllReturnsAllStoredHorses() throws NotFoundException{
+  public void getAllReturnsAllStoredHorses() throws NotFoundException {
     try {
       List<HorseListDto> horses = horseService.allHorses()
           .toList();
-      assertThat(horses.size()).isGreaterThanOrEqualTo(1); // TODO adapt to exact number of elements in test data later
+      assertThat(horses.size()).isGreaterThanOrEqualTo(1);
       assertThat(horses)
           .map(HorseListDto::id, HorseListDto::sex)
           .contains(tuple(-1L, Sex.FEMALE));
-    }catch(NotFoundException e){
+    } catch (NotFoundException e) {
       throw e;
     }
 
