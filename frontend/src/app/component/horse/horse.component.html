@@ -135,6 +135,12 @@
                aria-label="Delete horse" (click)="delete(horse.id)">
               <i class="bi-x-square"></i>
             </a>
+            <a class="btn btn-sm responsive-warning-button"
+               [routerLink]="['tree', horse.id]"
+               [queryParams]="{ generations: 5 }"
+               aria-label="Family-Tree">
+              <i class="bi-list-nested"></i>
+            </a>
           </div>
 
         </td>

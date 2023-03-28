@@ -17,5 +17,6 @@ CREATE TABLE IF NOT EXISTS horse
     father_id BIGINT,
     mother_id BIGINT,
     foreign key (father_id) references horse(id) ON DELETE SET NULL,
-    foreign key (mother_id) references horse(id) ON DELETE SET NULL
+    foreign key (mother_id) references horse(id) ON DELETE SET NULL,
+    foreign key (owner_id) references owner(id) ON DELETE SET NULL
 );

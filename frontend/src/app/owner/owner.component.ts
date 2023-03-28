@@ -25,7 +25,7 @@ export class OwnerComponent implements OnInit{
     this.service.getAll()
       .subscribe({
         next: data => {
-          this.notification.success(`The Data ${data}.`);
+          this.notification.success(`Owner data loaded sucessfuly`);
           this.owners = data;
         },
         error: error => {

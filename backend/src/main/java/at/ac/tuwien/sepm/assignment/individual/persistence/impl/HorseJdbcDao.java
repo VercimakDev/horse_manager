@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.type.Sex;
+
 import java.lang.invoke.MethodHandles;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,10 +32,10 @@ public class HorseJdbcDao implements HorseDao {
       + "  , date_of_birth = ?"
       + "  , sex = ?"
       + "  , owner_id = ?"
-          + "  , father_id = ?"
-          + "  , mother_id = ?"
+      + "  , father_id = ?"
+      + "  , mother_id = ?"
       + " WHERE id = ?";
-  private static final String SQL_CREATE = "INSERT INTO " + TABLE_NAME +"(name,description,date_of_birth,sex,owner_id,father_id,mother_id) VALUES(";
+  private static final String SQL_CREATE = "INSERT INTO " + TABLE_NAME + "(name,description,date_of_birth,sex,owner_id,father_id,mother_id) VALUES(";
   private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
   private final JdbcTemplate jdbcTemplate;
 
@@ -69,39 +70,40 @@ public class HorseJdbcDao implements HorseDao {
   @Override
   public List<Horse> filter(String input, Sex sex) throws NotFoundException {
     LOG.trace("filter({})", input, sex);
-    List<Horse> horses = jdbcTemplate.query(SQL_SELECT_ALL + " WHERE name ILIKE '%" + input + "%' AND sex ILIKE '" + sex.toString() + "' LIMIT 5;", this::mapRow);
+    List<Horse> horses =
+        jdbcTemplate.query(SQL_SELECT_ALL + " WHERE name ILIKE '%" + input + "%' AND sex ILIKE '" + sex.toString() + "' LIMIT 5;", this::mapRow);
     LOG.info(horses.toString());
     return horses;
   }
 
   @Override
-  public Horse create(HorseDetailDto horse){
-    LOG.trace("create({})",horse);
+  public Horse create(HorseDetailDto horse) {
+    LOG.trace("create({})", horse);
     int created = jdbcTemplate.update(SQL_CREATE + "?,?,?,?,?,?,?);",
-            horse.name(),
-            horse.description(),
-            horse.dateOfBirth(),
-            horse.sex().toString(),
-            horse.ownerId(),
-            horse.fatherId(),
-            horse.motherId());
+        horse.name(),
+        horse.description(),
+        horse.dateOfBirth(),
+        horse.sex().toString(),
+        horse.ownerId(),
+        horse.fatherId(),
+        horse.motherId());
     LOG.info("created horse with name:" + horse.name() + " and father:" + horse.fatherId());
     return new Horse()
-            .setId(horse.id())
-            .setName(horse.name())
-            .setDescription(horse.description())
-            .setDateOfBirth(horse.dateOfBirth())
-            .setSex(horse.sex())
-            .setOwnerId(horse.ownerId())
-            .setFather(horse.fatherId())
-            .setMother(horse.motherId())
-            ;
+        .setId(horse.id())
+        .setName(horse.name())
+        .setDescription(horse.description())
+        .setDateOfBirth(horse.dateOfBirth())
+        .setSex(horse.sex())
+        .setOwnerId(horse.ownerId())
+        .setFather(horse.fatherId())
+        .setMother(horse.motherId())
+        ;
   }
 
   @Override
   public long delete(long id) throws NotFoundException {
     int deleted = jdbcTemplate.update(SQL_DELETE, id);
-    if(deleted == 0){
+    if (deleted == 0) {
       throw new NotFoundException("Could not update horse with ID " + id + ", because it does not exist");
     }
     return id;
@@ -112,46 +114,46 @@ public class HorseJdbcDao implements HorseDao {
     LOG.trace("search({})", horse);
     String preparedStatement = SQL_SELECT_ALL + " WHERE";
     int ands = 0;
-    if(horse.name() != null && !horse.name().isBlank()){
+    if (horse.name() != null && !horse.name().isBlank()) {
       preparedStatement += " name ILIKE '%" + horse.name() + "%'";
       ands++;
     }
-    if(horse.description() != null && !horse.description().isBlank()){
-      if(addAnds(ands)) {
+    if (horse.description() != null && !horse.description().isBlank()) {
+      if (addAnds(ands)) {
         preparedStatement += " AND ";
-      }else{
+      } else {
         ands++;
       }
       preparedStatement += " description ILIKE '%" + horse.description() + "%'";
     }
-    if(horse.bornBefore() != null){
-      if(addAnds(ands)) {
+    if (horse.bornBefore() != null) {
+      if (addAnds(ands)) {
         preparedStatement += " AND ";
-      }else{
+      } else {
         ands++;
       }
-      preparedStatement += " date_of_birth < '" + horse.bornBefore().toString()+"'";
+      preparedStatement += " date_of_birth < '" + horse.bornBefore().toString() + "'";
     }
-    if(horse.sex() != null){
-      if(addAnds(ands)) {
+    if (horse.sex() != null) {
+      if (addAnds(ands)) {
         preparedStatement += " AND ";
-      }else{
+      } else {
         ands++;
       }
       preparedStatement += " sex ILIKE '" + horse.sex().toString() + "%'";
     }
-    if(ownerMatchingIDs != null && ownerMatchingIDs.size() !=0){
-      if(addAnds(ands)) {
+    if (ownerMatchingIDs != null && ownerMatchingIDs.size() != 0) {
+      if (addAnds(ands)) {
         preparedStatement += " AND ";
-      }else{
+      } else {
         ands++;
       }
       StringBuilder sb = new StringBuilder();
       sb.append('(');
-      for (OwnerDto owner:ownerMatchingIDs) {
-        if(ownerMatchingIDs.get(ownerMatchingIDs.size()-1) == owner) {
+      for (OwnerDto owner : ownerMatchingIDs) {
+        if (ownerMatchingIDs.get(ownerMatchingIDs.size() - 1) == owner) {
           sb.append("owner_id = " + owner.id() + ")");
-        }else {
+        } else {
           sb.append("owner_id = " + owner.id() + " OR ");
         }
       }
@@ -162,7 +164,8 @@ public class HorseJdbcDao implements HorseDao {
     LOG.info(horses.toString());
     return horses;
   }
-  public boolean addAnds(int ands){
+
+  public boolean addAnds(int ands) {
     return ands > 0;
   }
 
@@ -202,8 +205,8 @@ public class HorseJdbcDao implements HorseDao {
         .setDateOfBirth(result.getDate("date_of_birth").toLocalDate())
         .setSex(Sex.valueOf(result.getString("sex")))
         .setOwnerId(result.getObject("owner_id", Long.class))
-            .setFather(result.getObject("father_id",Long.class))
-            .setMother(result.getObject("mother_id",Long.class))
+        .setFather(result.getObject("father_id", Long.class))
+        .setMother(result.getObject("mother_id", Long.class))
         ;
   }
 }

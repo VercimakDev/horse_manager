@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
+
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
 
@@ -15,7 +16,15 @@ import at.ac.tuwien.sepm.assignment.individual.type.Sex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -32,17 +41,17 @@ public class HorseEndpoint {
 
   @GetMapping
   public Stream<HorseListDto> searchHorses(HorseSearchDto searchParameters) {
-    if(service.allFieldsNull(searchParameters)) {
+    if (service.allFieldsNull(searchParameters)) {
       LOG.info("GET ALL HORSES " + BASE_PATH);
       return service.allHorses();
-    }else{
+    } else {
       LOG.info("GET filter Horses for input: " + searchParameters);
-      try{
+      try {
 
         return service.search(searchParameters);
       } catch (Exception e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        logClientError(status,"Horse could not be created", e);
+        logClientError(status, "Horse could not be created", e);
         throw new ResponseStatusException(status, e.getMessage(), e);
       }
     }
@@ -59,27 +68,28 @@ public class HorseEndpoint {
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
+
   @PostMapping
-  public HorseDetailDto createHorse(@RequestBody HorseDetailDto horse){
+  public HorseDetailDto createHorse(@RequestBody HorseDetailDto horse) {
     LOG.info("POST trying to create Horse with the Name: " + horse.name());
-    try{
+    try {
       LOG.info("createHorse Father:" + horse.fatherId());
       return service.create(horse);
-    } catch(Exception e) {
+    } catch (Exception e) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      logClientError(status,"Horse could not be created", e);
+      logClientError(status, "Horse could not be created", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
 
   @GetMapping("/{input}/{sex}")
-  public Stream<HorseListDto> getParentCandidates(@PathVariable String input,@PathVariable Sex sex) {
+  public Stream<HorseListDto> getParentCandidates(@PathVariable String input, @PathVariable Sex sex) {
     LOG.info("GET trying to filter Horses for input: " + input);
-    try{
+    try {
       return service.filter(input, sex);
     } catch (Exception e) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      logClientError(status,"Horse could not be created", e);
+      logClientError(status, "Horse could not be created", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
@@ -96,18 +106,30 @@ public class HorseEndpoint {
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
+
   @DeleteMapping("{id}")
-  public long delete(@PathVariable long id){
-    LOG.info("DELETE /{}",id);
-    try{
+  public long delete(@PathVariable long id) {
+    LOG.info("DELETE /{}", id);
+    try {
       return service.delete(id);
-    }catch(Exception e){
+    } catch (Exception e) {
       HttpStatus status = HttpStatus.NOT_FOUND;
       logClientError(status, "Horse to update not found", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
 
+  @GetMapping("{id}/familytree/{generations}")
+  public HorseDetailDto getTree(@PathVariable long id, @PathVariable int generations){
+    LOG.info("GET GENERATIONS " + BASE_PATH + "/{}" + "/{}", id, generations);
+    try {
+      return service.getById(id, generations);
+    } catch (NotFoundException e) {
+      HttpStatus status = HttpStatus.NOT_FOUND;
+      logClientError(status, "Horse to get details of not found", e);
+      throw new ResponseStatusException(status, e.getMessage(), e);
+    }
+  }
 
 
 

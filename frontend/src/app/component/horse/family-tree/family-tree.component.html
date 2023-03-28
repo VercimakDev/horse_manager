@@ -1,0 +1,58 @@
+<h1 *ngIf="isRootHorse" class="display-1">Family Tree</h1>
+<div *ngIf="isRootHorse" class="d-flex justify-content-between align-items-center p-3">
+  <div class="d-flex flex-row w-auto">
+    <button class="btn btn-primary mr-1" (click)="searchHorses()" aria-label="Load">
+      <i class="bi bi-arrow-clockwise"></i>
+      Load
+    </button>
+    <span style="flex: 1"></span>
+  </div>
+  <div class="generations-container">
+    <label for="generations">maximum Generations:</label>
+    <input class="form-control generations-input" type="number" [(ngModel)]="generations" (change)="searchHorses()" (keyup)="searchHorses()">
+  </div>
+
+  <div>
+    <span class="note-header">Info:</span><br>
+    <span>1 Generations = Horse</span><br>
+    <span>2 Generation = Horse and Parents</span><br>
+    <span>3 Generations = Horse, Parents, Grandparents</span>
+  </div>
+</div>
+<ngb-accordion #acc="ngbAccordion" [activeIds]="activeIds">
+  <ngb-panel [disabled]="!horse.mother && !horse.father" id="panel-{{horse.id}}">
+    <ng-template ngbPanelHeader let-opened="opened">
+      <div class="accordion-button custom-header justify-content-between" [class.collapsed]="!opened">
+        <div class="d-flex align-items-baseline">
+          <button ngbPanelToggle class="btn-extend" *ngIf="!opened">+</button>
+          <button ngbPanelToggle class="btn-extend" *ngIf="opened" (click)="removeActiveIds()">-</button>
+          <p class="tree-value">{{horse.name}}</p>
+        </div>
+        <div class="d-flex align-items-baseline">
+          <i *ngIf="isFemale(horse.sex)" class="bi bi-gender-female"></i>
+          <i *ngIf="!isFemale(horse.sex)" class="bi bi-gender-male"></i>
+          <div class="btn-group">
+            <a class="btn btn-sm responsive-info-button"
+               [routerLink]="['../../details', horse.id]"
+               aria-label="Show horse details">
+              <i class="bi bi-info-lg"></i>
+            </a>
+            <a class="btn btn-sm responsive-warning-button"
+               [routerLink]="['../../edit', horse.id]"
+               aria-label="Edit horse">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <a class="btn btn-sm responsive-warning-button"
+               aria-label="Delete horse" (click)="delete(horse.id)">
+              <i class="bi-x-square"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template ngbPanelContent>
+      <app-family-tree *ngIf="horse.mother" [generations]="generations" [rootComponent]="rootComponent" [rootHorse]="rootHorse" [isRootHorse]="false" [horse]="horse.mother" [activeIds]="activeIds"></app-family-tree>
+      <app-family-tree *ngIf="horse.father" [generations]="generations" [rootComponent]="rootComponent" [rootHorse]="rootHorse" [isRootHorse]="false" [horse]="horse.father" [activeIds]="activeIds"></app-family-tree>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>

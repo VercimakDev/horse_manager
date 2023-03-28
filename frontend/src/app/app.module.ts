@@ -15,6 +15,7 @@ import {HorseComponent} from './component/horse/horse.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { OwnerComponent } from './owner/owner.component';
 import { OwnerCreateComponent } from './owner/owner-create/owner-create.component';
+import { FamilyTreeComponent } from './component/horse/family-tree/family-tree.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +25,7 @@ import { OwnerCreateComponent } from './owner/owner-create/owner-create.componen
     AutocompleteComponent,
     OwnerComponent,
     OwnerCreateComponent,
+    FamilyTreeComponent,
   ],
   imports: [
     BrowserModule,

@@ -66,7 +66,7 @@ export class HorseComponent implements OnInit {
     const observable = this.service.delete(id);
     observable.subscribe({
       next: data => {
-        this.notification.success(`Horse with ID: ${id} successfully deleted.`);
+        this.notification.success(`Horse was deleted successfully`);
         this.router.navigate(['/horses']);
         this.ngOnInit();
       },
@@ -79,10 +79,10 @@ export class HorseComponent implements OnInit {
 
   getPathSearchParams() {
     const name = this.route.snapshot.paramMap.get('name');
-    const description = this.route.snapshot.paramMap.get('description');
-    const dateOfBirth = this.route.snapshot.paramMap.get('dateOfBirth');
-    const sex = this.route.snapshot.paramMap.get('sex');
-    const ownerName = this.route.snapshot.paramMap.get('ownerName');
+    const description = this.route.snapshot.queryParams.description;
+    const dateOfBirth = this.route.snapshot.queryParams.dateOfBirth;
+    const sex = this.route.snapshot.queryParams.sex;
+    const ownerName = this.route.snapshot.queryParams.ownerName;
     if (name) {
       this.searchHorse.name = name;
     }
@@ -115,6 +115,7 @@ export class HorseComponent implements OnInit {
         }
       });
     }
+    this.searchHorses();
   }
 
   ownerSuggestions = (input: string) => (input === '')

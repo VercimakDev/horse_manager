@@ -31,9 +31,9 @@ public interface HorseService {
    *
    * @param horse the horse to update
    * @return the updated horse
-   * @throws NotFoundException if the horse with given ID does not exist in the persistent data store
+   * @throws NotFoundException   if the horse with given ID does not exist in the persistent data store
    * @throws ValidationException if the update data given for the horse is in itself incorrect (description too long, no name, …)
-   * @throws ConflictException if the update data given for the horse is in conflict the data currently in the system (owner does not exist, …)
+   * @throws ConflictException   if the update data given for the horse is in conflict the data currently in the system (owner does not exist, …)
    */
   HorseDetailDto update(HorseDetailDto horse) throws NotFoundException, ValidationException, ConflictException;
 
@@ -50,13 +50,25 @@ public interface HorseService {
   HorseDetailDto getById(long id) throws NotFoundException;
 
   /**
+   * Get the horse with given ID, with more detail information.
+   * This includes the owner of the horse, and its parents.
+   * The parents of the parents are not included.
+   *
+   * @param id the ID of the horse to get
+   * @param generations sets the dept of resursion for the family tree
+   * @return the horse with ID {@code id}
+   * @throws NotFoundException if the horse with the given ID does not exist in the persistent data store
+   */
+  HorseDetailDto getById(long id, int generations) throws NotFoundException;
+
+  /**
    * Creates a horse with the data given in {@code horse}
    * in the persistent data store.
    *
    * @param horse the horse to create
    * @return the created horse
    * @throws ValidationException if the data given for the horse is in itself incorrect (description too long, no name, …)
-   * @throws ConflictException if the update given for the horse is in conflict the data currently in the system (owner does not exist, …)
+   * @throws ConflictException   if the update given for the horse is in conflict the data currently in the system (owner does not exist, …)
    */
   HorseDetailDto create(HorseDetailDto horse) throws ValidationException, ConflictException;
 
@@ -64,11 +76,12 @@ public interface HorseService {
    * Filters the horses to find parents with given data {@code input, sex}
    *
    * @param input the input to filter for names of parents
-   * @param sex the sex to filter for parents
+   * @param sex   the sex to filter for parents
    * @return the filtered horses
    * @throws NotFoundException if no Horses are found for the given input and sex
    */
   Stream<HorseListDto> filter(String input, Sex sex) throws NotFoundException;
+
   /**
    * Deletes the horse with the given id {@code id}
    *
@@ -85,7 +98,7 @@ public interface HorseService {
    * @return the filtered horses
    * @throws NotFoundException if no Horses are found for the given horse
    */
-    Stream<HorseListDto> search(HorseSearchDto horse);
+  Stream<HorseListDto> search(HorseSearchDto horse) throws NotFoundException;
 
   /**
    * Looks at all the fields of the given horseSearchDto and checks them for being null {@code horse}

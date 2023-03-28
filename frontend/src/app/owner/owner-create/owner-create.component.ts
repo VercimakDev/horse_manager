@@ -44,7 +44,7 @@ export class OwnerCreateComponent {
       const observable = this.service.create(this.owner);
       observable.subscribe({
         next: data => {
-          this.notification.success(`Owner ${this.owner.firstName}  ${this.owner.lastName} successfully created.`);
+          this.notification.success(`Owner ${this.owner.firstName}  ${this.owner.lastName} created succesfully`);
           this.router.navigate(['/owners']);
         },
         error: error => {

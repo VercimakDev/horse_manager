@@ -88,7 +88,24 @@ export class HorseService {
     return this.http.get<Horse>(baseUri + `/${id}`);
   }
 
+  /**
+   * Delete the Horse with the given id.
+   *
+   * @param id the id of the horse
+   * @return an Observable for the looked up horse
+   */
   delete(id: number): Observable<any>{
     return this.http.delete(baseUri + `/${id}`);
+  }
+
+  /**
+   * Get the Horse with the given id and his family tree.
+   *
+   * @param id the id of the horse
+   * @param generation the id of the horse
+   * @return an Observable for the looked up horse
+   */
+  getByIdLimited(id: number, generation: number): Observable<Horse>{
+    return this.http.get<Horse>(baseUri + `/${id}/familytree/${generation}`);
   }
 }
