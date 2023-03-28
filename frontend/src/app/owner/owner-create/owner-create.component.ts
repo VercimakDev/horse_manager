@@ -1,14 +1,9 @@
 import { Component } from '@angular/core';
 import {NgForm, NgModel} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {Horse} from '../../dto/horse';
-import {HorseCreateEditMode} from '../../component/horse/horse-create-edit/horse-create-edit.component';
 import {Owner} from '../../dto/owner';
-import {HorseService} from "../../service/horse.service";
-import {OwnerService} from "../../service/owner.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {ToastrService} from "ngx-toastr";
-import {HttpClient} from "@angular/common/http";
+import {OwnerService} from '../../service/owner.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-owner-create',
