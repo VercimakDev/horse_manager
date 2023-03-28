@@ -65,7 +65,7 @@ public class HorseEndpoint {
       return service.getById(id);
     } catch (NotFoundException e) {
       HttpStatus status = HttpStatus.NOT_FOUND;
-      logClientError(status,"Horse could because of a Conflict:", e);
+      logClientError(status, "Horse could because of a Conflict:", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
@@ -80,9 +80,9 @@ public class HorseEndpoint {
       HttpStatus status = HttpStatus.BAD_REQUEST;
       LOG.error("Horse could not be created because of a Validation exception:" + status, e);
       throw new ResponseStatusException(status, e.getMessage(), e);
-    }catch (ConflictException e){
+    } catch (ConflictException e) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      logClientError(status,"Horse could because of a Conflict:", e);
+      logClientError(status, "Horse could because of a Conflict:", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
@@ -94,7 +94,7 @@ public class HorseEndpoint {
       return service.filter(input, sex);
     } catch (NotFoundException e) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      logClientError(status,"Parentcandidates could not be found:", e);
+      logClientError(status, "Parentcandidates could not be found:", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
     }
   }
@@ -121,7 +121,7 @@ public class HorseEndpoint {
       HttpStatus status = HttpStatus.NOT_FOUND;
       logClientError(status, "Horse to update not found", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
-    } catch (ValidationException e){
+    } catch (ValidationException e) {
       HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
       logClientError(status, "Horse to update could not be Validatet", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
